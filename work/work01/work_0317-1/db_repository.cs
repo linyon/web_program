@@ -16,9 +16,9 @@ namespace work_0317_1
             var command = new System.Data.SqlClient.SqlCommand("", connection);
 
             command.CommandText = string.Format(@"
-INSERT        INTO    stations(ID , LocationAddress , ObservatoryName , LocationByTWD67 , CreateTime)
-VALUES          ('{0}' , '{1}' , '{2}' , '{3}' , '{4}')"
-, st.ID, st.LocationAddress, st.ObservatoryName, st.LocationByTWD67, st.CreateTime);
+INSERT        INTO    stations(SiteName , UVI , PublishAgency , County , WGS84Lon,WGS84Lat,PublishTime)
+VALUES          (N'{0}' , N'{1}' ,N'{2}' , N'{3}' , N'{4}', N'{5}', N'{6}')"
+, st.SiteName, st.UVI, st.PublishAgency, st.County, st.WGS84Lon, st.WGS84Lat, st.PublishTime);
 
             command.ExecuteNonQuery();
             connection.Close();
