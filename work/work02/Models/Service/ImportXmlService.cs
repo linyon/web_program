@@ -14,10 +14,6 @@ namespace YON.Service
             List<Station> st = new List<Station>();
             var xml = XElement.Load(XmlPath);
             var sts_node = xml.Descendants("Data").ToList();
-            //for (var i = 0; i < sts_node.Count(); i++)
-            //{
-            //    var st_node = sts_node[i];
-            //}
             sts_node.Where(x => !x.IsEmpty).ToList().ForEach(st_node =>
             {
                 var SiteName = st_node.Element("SiteName").Value.Trim();

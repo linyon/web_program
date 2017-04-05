@@ -22,8 +22,7 @@ VALUES          (N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}')
             command.ExecuteNonQuery();
             connection.Close();
         }
-
-        public static List<Models.Station> FindAllSt()
+        public List<Models.Station> FindAllSt()
         {
             var result = new List<Models.Station>();
             var connection = new System.Data.SqlClient.SqlConnection(_connectionString);
@@ -31,7 +30,6 @@ VALUES          (N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}')
             var command = new System.Data.SqlClient.SqlCommand("", connection);
             command.CommandText = @"Select * from Station";
             var reader = command.ExecuteReader();
-
             while (reader.Read())
             {
                 Models.Station st_item = new Models.Station();

@@ -12,23 +12,32 @@ namespace YON
         {
             var import = new YON.Service.ImportXmlService();
             var db = new YON.Repository.StationRepository();
+            var sh = new YON.Show.Show();
             var sts = import.findst(@"D:\Work\Web\web_program\work\work02\uv.xml");
-            if(db.)
-            sts.ToList().ForEach(x => { db.Create(x); });
-            ShowStation(sts);
-        }
-        public static void ShowStation(List<Station> stations)
-        {
-
-            Console.WriteLine(string.Format("共收到{0}筆監測站的資料", stations.Count));
-            stations.ForEach(x =>
+            var list = db.FindAllSt();
+            if ( list.Count == 0) //第一次載入xml，存入db
             {
-                Console.WriteLine(string.Format("站點名稱：{0},地址:{1}", x.SiteName, x.UVI));
-                
-
-            });
-            Console.ReadKey();
-
+                Console.WriteLine("第一次載入xml，存入db");
+                sts.ToList().ForEach(x => { db.Create(x); });
+                list = db.FindAllSt();
+            }
+            Console.WriteLine(string.Format("共收到{0}筆紫外線監測資料", sts.Count));
+            Console.WriteLine("==========================================");
+            Console.WriteLine("（1）依測站查詢（2）依發布機關查詢（3）全部列表（0）離開");
+            Console.WriteLine("==========================================");
+            Console.Write("請選擇列表方式：");
+            var choose = Console.ReadLine();
+            while (sh.ShowSt(list, choose))
+            {
+                Console.Clear();
+                Console.WriteLine(string.Format("共收到{0}筆紫外線監測資料", sts.Count));
+                Console.WriteLine("==========================================");
+                Console.WriteLine("（1）依測站查詢（2）依發布機關查詢（3）全部列表（0）離開");
+                Console.WriteLine("==========================================");
+                Console.Write("請選擇列表方式：");
+                choose = Console.ReadLine();
+            }
         }
+        
     }
 }
