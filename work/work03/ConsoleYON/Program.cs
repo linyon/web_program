@@ -12,12 +12,12 @@ namespace YON
         {
             var import = new YON.Service.ImportXmlService();
             var db = new YON.Repository.StationRepository();
-            var sh = new YON.Show.Show();          
+            var sh = new YON.Show.Show();
             var list = db.FindAllSt();
             if ( list.Count == 0) //第一次載入xml，存入db
             {
-                var sts = import.findst(@"D:\Work\Web\web_program\work\work02\uv.xml");
                 Console.WriteLine("第一次載入xml，存入db");
+                var sts = import.findst(@"D:\Work\Web\web_program\work\work02\uv.xml");
                 sts.ToList().ForEach(x => { db.Create(x); });
                 list = db.FindAllSt();
             }
