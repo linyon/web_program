@@ -8,7 +8,9 @@ namespace YON.Repository
 {
     public class StationRepository
     {
-        private const string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Work\Web\web_program\work\work02\ConsoleYON\App_Data\UV_DB.mdf;Integrated Security=True";
+        private const string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\UV_DB.mdf;Integrated Security=True";
+
+        //private const string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Work\Web\web_program\work\work03\ConsoleYON\App_Data\UV_DB.mdf;Integrated Security=True";
         public void Create(Models.Station stations)
         {
             var connection = new System.Data.SqlClient.SqlConnection();

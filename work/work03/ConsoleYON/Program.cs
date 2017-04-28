@@ -4,12 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YON.Models;
+using System.IO;
 namespace YON
 {
     class Program
     {
+        static void setDBFilePath()
+        {
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string relative = @"..\..\App_Data\";
+            string absolute = Path.GetFullPath(Path.Combine(baseDirectory, relative));
+            AppDomain.CurrentDomain.SetData("DataDirectory", absolute);
+        }
         static void Main(string[] args)
         {
+            setDBFilePath();
             var import = new YON.Service.ImportXmlService();
             var db = new YON.Repository.StationRepository();
             var sh = new YON.Show.Show();
@@ -17,7 +26,7 @@ namespace YON
             if ( list.Count == 0) //第一次載入xml，存入db
             {
                 Console.WriteLine("第一次載入xml，存入db");
-                var sts = import.findst(@"D:\Work\Web\web_program\work\work02\uv.xml");
+                var sts = import.findst(@"D:\Work\Web\web_program\work\work03\uv.xml");
                 sts.ToList().ForEach(x => { db.Create(x); });
                 list = db.FindAllSt();
             }
