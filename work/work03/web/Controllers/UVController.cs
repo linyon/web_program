@@ -9,7 +9,7 @@ namespace web.Controllers
     public class UVController : Controller
     {
         // GET: UV
-        public ActionResult Index()
+        public ActionResult IndexMessage()
         {
             var st_Repository = new YON.Repository.StationRepository();
             var sts = st_Repository.FindAllSt();
@@ -20,6 +20,15 @@ namespace web.Controllers
                 message += string.Format("站點名稱：{0}（UVI：{1}）<br/>", x.SiteName, x.UVI);
             });
             return Content(message);
+        }
+        public ActionResult Index(string UserName ="")
+        {
+            var st_Repository = new YON.Repository.StationRepository();
+            var sts = st_Repository.FindAllSt();
+
+            ViewBag.UserName = UserName;
+            ViewBag.Stations = sts;
+            return View(sts);
         }
     }
 }
