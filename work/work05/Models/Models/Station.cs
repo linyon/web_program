@@ -16,5 +16,7 @@ namespace YON.Models
         public string WGS84Lon { get; set; } //經度
         public string WGS84Lat { get; set; } //緯度
         public DateTime PublishTime { get; set; } //發布時間
+        public DateTime LastRecordTime { get; set; } //最後紀錄時間
+        public string LastRecordUVI { get; set; } //最後紀錄UVI值
     }
 }

@@ -11,17 +11,20 @@ namespace YON.Repository
         private const string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\UV_DB.mdf;Integrated Security=True";
 
         //private const string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Work\Web\web_program\work\work03\ConsoleYON\App_Data\UV_DB.mdf;Integrated Security=True";
-        public void Create(Models.Station stations)
+        public void Create(List<Models.Station> stations) // Models.Station stations
         {
             var connection = new System.Data.SqlClient.SqlConnection();
             connection.ConnectionString = _connectionString;
             connection.Open();
-            var command = new System.Data.SqlClient.SqlCommand("", connection);
-            command.CommandText = string.Format(@"
+            foreach (var station in stations)
+            {
+                var command = new System.Data.SqlClient.SqlCommand("", connection);
+                command.CommandText = string.Format(@"
 INSERT        INTO    Station(SiteName, UVI, PublishAgency, County, WGS84Lon,WGS84Lat,PublishTime)
 VALUES          (N'{0}',N'{1}',N'{2}',N'{3}',N'{4}',N'{5}',N'{6}')
-", stations.SiteName, stations.UVI, stations.PublishAgency, stations.County, stations.WGS84Lon, stations.WGS84Lat, stations.PublishTime);
-            command.ExecuteNonQuery();
+", station.SiteName, station.UVI, station.PublishAgency, station.County, station.WGS84Lon, station.WGS84Lat, station.PublishTime);
+                command.ExecuteNonQuery();
+            }
             connection.Close();
         }
         public List<Models.Station> FindAllSt()

@@ -41,6 +41,7 @@ namespace YON.Service
         {
             List<Record> rd = new List<Record>();
             var db = new YON.Repository.StationRepository();
+            var rd_Db = new YON.Repository.RecordRepository();
             var URL = @"http://opendata.epa.gov.tw/ws/Data/UV/?format=json";
             var json_str = "";
             using (var web_client = new System.Net.WebClient())
@@ -64,13 +65,72 @@ namespace YON.Service
                 var pt = rd_Array.Property("PublishTime").Value.ToString().Trim();
                 var uvi = rd_Array.Property("UVI").Value.ToString().Trim();
                 var publish_time = DateTime.Parse(pt);
+
+
                 Record new_rd = new Record();
                 new_rd.SiteName = station.SiteName;
                 new_rd.UVI = uvi;
                 new_rd.PublishTime = publish_time;
-                rd.Add(new_rd);
+                var isExist = rd_Db.isExist(new_rd);
+                //rd.Add(new_rd);
+                if (!isExist)
+                {
+                    station.LastRecordTime = new_rd.PublishTime;
+                    station.LastRecordUVI = new_rd.UVI;
+                    new_rd.Station = station;
+                    rd.Add(new_rd);
+                }
+
             });
             return rd;
+        }
+        public List<Record> createrd_jsonUrl()
+        {
+            List<Record> rd = new List<Record>();
+            var db = new YON.Repository.StationRepository();
+            var rd_Db = new YON.Repository.RecordRepository();
+            var URL = @"http://opendata.epa.gov.tw/ws/Data/UV/?format=json";
+            var json_str = "";
+            using (var web_client = new System.Net.WebClient())
+            {
+                web_client.Encoding = Encoding.UTF8;
+                json_str = web_client.DownloadString(URL);
+            }
+            var stations = db.FindAllSt()
+                .ToDictionary(x => x.SiteName, x => x);
+            var json = JsonConvert.DeserializeObject<JArray>(json_str); //JSON字串還原回JObject，動態存取      
+            var jsonDatas = json.ToList();//json.Properties().Values().ToList();
+            jsonDatas.ForEach(item =>
+            {
+                var rd_Array = item as JObject;
+                var st_sitename = rd_Array.Property("SiteName").Value.ToString().Trim();
+                if (!stations.ContainsKey(st_sitename))
+                {
+                    return;
+                }
+                var station = stations[st_sitename];
+                var pt = rd_Array.Property("PublishTime").Value.ToString().Trim();
+                var uvi = rd_Array.Property("UVI").Value.ToString().Trim();
+                var publish_time = DateTime.Parse(pt);
+
+
+                Record new_rd = new Record();
+                new_rd.SiteName = station.SiteName;
+                new_rd.UVI = uvi;
+                new_rd.PublishTime = publish_time;
+                var isExist = rd_Db.isExist(new_rd);
+                //rd.Add(new_rd);
+                if (!isExist)
+                {
+                    station.LastRecordTime = new_rd.PublishTime;
+                    station.LastRecordUVI = new_rd.UVI;
+                    new_rd.Station = station;
+                    rd.Add(new_rd);
+                }
+
+            });
+            return rd;
+
         }
     }
 }

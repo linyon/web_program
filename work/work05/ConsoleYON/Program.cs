@@ -22,11 +22,20 @@ namespace YON
             var records = import.findrd_jsonUrl();
             Repository.RecordRepository db = new Repository.RecordRepository();
             db.Create(records);
+            Repository.StationRepository st_Dd = new Repository.StationRepository();
+            records.ForEach(x =>
+            {
+                var st = x.Station;
+                var list = new List<Station>();
+                list.Add(st);
+                st_Dd.Create(new List<Station> { st });
+            });
         }
         static void Main(string[] args)
         {
             setDBFilePath();
             createRecord();
+            Console.ReadKey();
             //var import = new YON.Service.ImportXmlService();
             //var db = new YON.Repository.StationRepository();
             //var sh = new YON.Show.Show();

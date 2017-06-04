@@ -12,5 +12,7 @@ namespace YON.Models
         public string SiteName { get; set; } //測站名稱
         public string UVI { get; set; } //紫外線指數
         public DateTime PublishTime { get; set; } //發布時間
+
+        public Station Station { get; set; }
     }
 }
