@@ -152,6 +152,8 @@
     <Content Include="Content\IMAGE\Location_04.png" />
     <Content Include="Content\IMAGE\Location_05.png" />
     <Content Include="Content\IMAGE\Loc_2.png" />
+    <Content Include="Content\IMAGE\member1.jpg" />
+    <Content Include="Content\IMAGE\member2.jpg" />
     <Content Include="Content\IMAGE\taiwan-256.png" />
     <Content Include="Content\IMAGE\taiwan-512.png" />
     <Content Include="Content\IMAGE\TW.jpg" />

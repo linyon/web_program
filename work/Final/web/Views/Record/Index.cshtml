@@ -18,9 +18,9 @@
                 </div>
                 <hr />
                 <div class="w3-container">
-                    <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>SiteName：@ViewBag.Message</p>
-                    <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>DataCount：@Model.Count()</p>
-                    <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>LatestUpdate：@ViewBag.Last</p>
+                    <p><i class="fa fa-map-marker fa-fw w3-margin-right w3-large w3-text-teal"></i>SiteName：@ViewBag.Message</p>
+                    <p><i class="fa fa-navicon fa-fw w3-margin-right w3-large w3-text-teal"></i>DataCount：@Model.Count()</p>
+                    <p><i class="fa fa-book fa-fw w3-margin-right w3-large w3-text-teal"></i>LatestUpdate：@ViewBag.Last</p>
                     <hr>
                     <br>
                 </div>
@@ -41,8 +41,6 @@
                         <hr>
                         <h3 class="w3-opacity"><b>UVI：@Html.DisplayFor(modelItem => item.UVI)</b></h3>
                         <h4 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>@Html.DisplayFor(modelItem => item.PublishTime)</h4>
-                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Edit</button>
-                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Delete</button>
                     </div>
                 }
             </div>
