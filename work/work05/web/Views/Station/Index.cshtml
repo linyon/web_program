@@ -3,9 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var Search = ViewBag.Search;
     var Stations = Model;//ViewBag.Stations;
-
-
-    //this.Model
+   
+                         //this.Model
 }
 <form class="form-inline" method="post" action="~/Station/Index">
     <div class="form-group">
@@ -16,18 +15,64 @@
     <button type="submit" class="btn btn-default">搜尋</button>
 </form>
 <hr />
+<div id="map" style="width:100%;height:750px;"></div>
+<script>
+
+      function initMap() {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: { lat: 23.974003, lng: 120.980111 }
+        });
+
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+        var markers = locations.map(function(location, i) {
+            return new google.maps.Marker({
+            position: location,
+            label: labels[i % labels.length],
+            icon: image
+          });
+        });
+        var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+      }
+      var locations = [
+        { lat: 25.175909, lng: 121.432182 },
+        { lat: 22.650808, lng: 120.329720 },
+        { lat: 22.644713, lng: 120.968768},
+      ]
+</script>
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+</script>
+
 <div class="list-group">
     <a href="#" class="list-group-item active">
         Stations
     </a>
     @for (int i = 0; i < Model.Count; i++)
-    {
-
-        <a class="list-group-item">
-            <h4 class="list-group-item-heading">@Model[i].SiteName</h4>
-            <p class="list-group-item-text">@Model[i].PublishAgency</p>
-        </a>
-
-    }
+        {
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">@Model[i].SiteName</h4>
+                <p class="list-group-item-text">@Model[i].PublishAgency</p>
+                @if (Model[i].LastRecordTime == DateTime.MinValue)
+                {
+                    <span class="label label-danger">無紫外線資料</span>
+                }
+                else
+                {
+                    <span class="label label-success">UVI：@Model[i].LastRecordUVI</span>
+                    <small>最後更新時間：@Model[i].LastRecordTime.ToString("yyyy/MM/dd HH:mm")</small>
+                }
+                <hr />
+                <p>
+                    <a href="/Station/Update?sitename=@Model[i].SiteName" class="btn btn-primary btn-sm">修改</a>
+                    <a href="/Record/Index?sitename=@Model[i].SiteName" class="btn btn-default btn-sm">紀錄</a>
+                </p>
+            </div>
+        }
 
 </div>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjS99jTaUm5CiI_il81PlfQ5UGeFesuZw&callback=initMap">
+</script>

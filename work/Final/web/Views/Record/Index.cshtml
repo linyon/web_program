@@ -1,0 +1,56 @@
+﻿@model List<YON.Models.Record>
+@{
+    ViewBag.Title = "Index";
+    var count = new int[12];
+}
+<!-- Page Container -->
+<div class="w3-content w3-margin-top" style="max-width:1400px;">
+
+    <!-- The Grid -->
+    <div class="w3-row-padding">
+
+        <!-- Left Column -->
+        <div class="w3-third">
+            <div class="w3-white w3-text-grey w3-card-2">
+                <div class="w3-display-container">
+                    <br />
+                    <p class="w3-center"><img src="~/Content/IMAGE/TW.jpg" class="w3-circle" style="width:50%" alt="Avatar"></p>
+                </div>
+                <hr />
+                <div class="w3-container">
+                    <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>SiteName：@ViewBag.Message</p>
+                    <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>DataCount：@Model.Count()</p>
+                    <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>LatestUpdate：@ViewBag.Last</p>
+                    <hr>
+                    <br>
+                </div>
+            </div>
+            <br>
+
+            <!-- End Left Column -->
+        </div>
+
+        <!-- Right Column -->
+        <div class="w3-twothird">
+
+            <div class="w3-container w3-card-2 w3-white w3-margin-bottom">
+                <h2 class="w3-text-grey"><i class="fa fa-list fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Record List</h2>
+                @foreach (var item in Model)
+                {
+                    <div class="w3-container">
+                        <hr>
+                        <h3 class="w3-opacity"><b>UVI：@Html.DisplayFor(modelItem => item.UVI)</b></h3>
+                        <h4 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>@Html.DisplayFor(modelItem => item.PublishTime)</h4>
+                        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa fa-thumbs-up"></i>  Edit</button>
+                        <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Delete</button>
+                    </div>
+                }
+            </div>
+            <!-- End Right Column -->
+        </div>
+
+        <!-- End Grid -->
+    </div>
+
+    <!-- End Page Container -->
+</div>

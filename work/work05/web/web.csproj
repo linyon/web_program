@@ -121,6 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RecordController.cs" />
     <Compile Include="Controllers\StationController.cs" />
     <Compile Include="Controllers\UVController.cs" />
     <Compile Include="Global.asax.cs">
@@ -129,6 +130,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\UV_DB.mdf" />
+    <Content Include="App_Data\UV_DB_log.ldf">
+      <DependentUpon>UV_DB.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-3.3.7-dist\css\bootstrap.css" />
@@ -140,6 +145,11 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\html\yon_index.html" />
+    <Content Include="Content\jvectormap\css\jquery-jvectormap-1.2.2.css" />
+    <Content Include="Content\jvectormap\js\jquery-jvectormap-1.2.2.min.js" />
+    <Content Include="Content\jvectormap\js\jquery-jvectormap-tw.js" />
+    <Content Include="Content\jvectormap\js\jquery-jvectormap-usa-en.js" />
+    <Content Include="Content\jvectormap\js\jquery-jvectormap-world-mill-en.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -159,6 +169,10 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Content\jquery-jvectormap-1.2.2.css" />
+    <Content Include="Content\jquery-jvectormap-1.2.2.min.js" />
+    <Content Include="Content\jquery-jvectormap-tw-mill-en.js" />
+    <Content Include="Content\jquery-jvectormap-tw.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -183,9 +197,9 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\UV\Index.cshtml" />
     <Content Include="Views\Station\Index.cshtml" />
+    <Content Include="Views\Record\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +215,9 @@
       <Project>{74dd2f5a-7be0-4404-ae16-2157074b4e38}</Project>
       <Name>Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

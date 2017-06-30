@@ -27,7 +27,7 @@ namespace YON.Service
                 var PublishTime = st_node.Element("PublishTime").Value.Trim();
                 Station st_data = new Station();
                 st_data.SiteName = SiteName;
-                st_data.UVI = UVI;
+                st_data.UVI = int.Parse(UVI);
                 st_data.PublishAgency = PublishAgency;
                 st_data.County = County;
                 st_data.WGS84Lon = WGS84Lon;
@@ -69,7 +69,7 @@ namespace YON.Service
 
                 Record new_rd = new Record();
                 new_rd.SiteName = station.SiteName;
-                new_rd.UVI = uvi;
+                new_rd.UVI = int.Parse(uvi);
                 new_rd.PublishTime = publish_time;
                 var isExist = rd_Db.isExist(new_rd);
                 //rd.Add(new_rd);
@@ -116,19 +116,21 @@ namespace YON.Service
 
                 Record new_rd = new Record();
                 new_rd.SiteName = station.SiteName;
-                new_rd.UVI = uvi;
+                new_rd.UVI = int.Parse(uvi);
                 new_rd.PublishTime = publish_time;
                 var isExist = rd_Db.isExist(new_rd);
                 //rd.Add(new_rd);
-                if (!isExist)
+                if (!isExist) //是否存在
                 {
                     station.LastRecordTime = new_rd.PublishTime;
                     station.LastRecordUVI = new_rd.UVI;
-                    new_rd.Station = station;
+                    //new_rd.Station = station;
+                    db.UpdateLastRecord(station);
                     rd.Add(new_rd);
                 }
 
             });
+            rd_Db.Create(rd);
             return rd;
 
         }

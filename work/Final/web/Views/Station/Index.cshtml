@@ -1,0 +1,452 @@
+﻿@model List<YON.Models.Station>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Search = ViewBag.Search;
+    var Stations = Model;//ViewBag.Stations;
+                         //this.Model
+}
+<style type="text/css">
+        #map_canvas {
+            padding: 20px;
+            margin-right: 10px;
+            /*float: left;*/
+        }
+        /*nav-tab*/
+        .nav-tabs {
+            border-bottom: 2px solid #DDD;
+        }
+
+            .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+                border-width: 0;
+            }
+
+            .nav-tabs > li > a {
+                border: none;
+                color: #666;
+            }
+
+                .nav-tabs > li.active > a, .nav-tabs > li > a:hover {
+                    border: none;
+                    color: #4285F4 !important;
+                    background: transparent;
+                }
+
+                .nav-tabs > li > a::after {
+                    content: "";
+                    background: #4285F4;
+                    height: 2px;
+                    position: absolute;
+                    width: 100%;
+                    left: 0px;
+                    bottom: -1px;
+                    transition: all 250ms ease 0s;
+                    transform: scale(0);
+                }
+
+            .nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after {
+                transform: scale(1);
+            }
+
+        .tab-nav > li > a::after {
+            background: #21527d none repeat scroll 0% 0%;
+            color: #fff;
+        }
+
+        .tab-pane {
+            padding: 15px 0;
+        }
+
+        .tab-content {
+            padding: 20px;
+        }
+
+        .card {
+            background: #FFF none repeat scroll 0% 0%;
+            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        body {
+            background: #EDECEC;
+            padding: 50px;
+        }
+        /*notice*/
+        .notice {
+            padding: 15px;
+            background-color: #fafafa;
+            border-left: 6px solid #7f7f84;
+            margin-bottom: 10px;
+            -webkit-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+            -moz-box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+            box-shadow: 0 5px 8px -6px rgba(0,0,0,.2);
+        }
+
+        .notice-sm {
+            padding: 10px;
+            font-size: 80%;
+        }
+
+        .notice-lg {
+            padding: 35px;
+            font-size: large;
+        }
+
+        .notice-low {
+            border-color: #009100;
+        }
+
+            .notice-low > strong {
+                color: #009100;
+            }
+
+        .notice-moderate {
+            border-color: #FFDC35;
+        }
+
+            .notice-moderate > strong {
+                color: #FFDC35;
+            }
+
+        .notice-high {
+            border-color: #FF9224;
+        }
+
+            .notice-high > strong {
+                color: #FF9224;
+            }
+
+        .notice-veryhigh {
+            border-color: #FF2D2D;
+        }
+
+            .notice-veryhigh > strong {
+                color: #FF2D2D;
+            }
+        .notice-extreme {
+            border-color: #B15BFF;
+        }
+
+            .notice-extreme > strong {
+                color: #B15BFF;
+            }
+            .notice-none {
+            border-color: #B15BFF;
+        }
+    /**/
+    input[type=text] {
+        width: 130px;
+        -webkit-transition: width 0.4s ease-in-out;
+        transition: width 0.4s ease-in-out;
+    }
+
+    /* When the input field gets focus, change its width to 100% */
+    input[type=text]:focus {
+        width: 100%;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        var _showTab = 0;// 預設顯示第一個 Tab
+        $('.abgne_tab').each(function () {
+            var $tab = $(this);// 目前的頁籤區塊
+            var $defaultLi = $('ul.nav-tabs li', $tab).eq(_showTab).addClass('active');
+            $($defaultLi.find('a').attr('href')).siblings().hide();
+            $('ul.nav-tabs li', $tab).click(function () {// 當 li 頁籤被點擊時...
+                var $this = $(this),
+                    _clickTab = $this.find('a').attr('href');// 找出 li 中的超連結 href(#id)
+                $this.addClass('active').siblings('.active').removeClass('active');// 把目前點擊到的 li 頁籤加上 .active，並把兄弟元素中有 .active 的都移除 class
+
+                $(_clickTab).stop(false, true).fadeIn().siblings().hide();// 淡入相對應的內容並隱藏兄弟元素
+                return false;
+            }).find('a').focus(function () {
+                this.blur();
+            });
+        });
+    });
+    $(document).ready(function () {
+        var myMarkers = [];
+        $.ajax({
+            async: false,
+            type: "POST",
+            dataType: "json",
+            url: '@Url.Action("GetAddress", "Station")',
+            data: '{}',
+            success: function (result) {
+                myMarkers = result.AddressResult;
+                initMap(myMarkers);
+            }
+        });
+    });
+    function initMap(myMarkers) {
+        var mapOptions = {
+            center: { lat: 23.974003, lng: 120.980111 },
+            zoom: 6,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var infoWindow = new google.maps.InfoWindow();
+        var map = new google.maps.Map(document.getElementById("Map"), mapOptions);
+        for (i = 0; i < myMarkers.length; i++) {
+            data = myMarkers[i];
+            var str = data.LastRecordUVI.toString();
+            var image = '';
+            if (data.LastRecordUVI < 3) image = '/Content/IMAGE/Location_01.png';
+            else if (data.LastRecordUVI < 6) image = '/Content/IMAGE/Location_02.png';
+            else if (data.LastRecordUVI < 8) image = '/Content/IMAGE/Location_03.png';
+            else if (data.LastRecordUVI < 11) image = '/Content/IMAGE/Location_04.png';
+            else image = '/Content/IMAGE/Location_05.png';
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(data.WGS84Lat, data.WGS84Lon),
+                map: map,
+                icon: image
+            });
+            (function (marker, data) {
+                google.maps.event.addListener(marker, "click", function (e) {
+                    infoWindow.setContent(data.SiteName + ":" + data.LastRecordUVI);
+                    infoWindow.open(map, marker);
+                    $("SiteName").text(data.SiteName);
+                    $("UVI").text(data.UVI);
+
+                });
+            })(marker, data);
+        }
+    }
+    function myFunction() {
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjS99jTaUm5CiI_il81PlfQ5UGeFesuZw&v=3.exp&signed_in=false&sensor=true"></script>
+
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:40px">
+    <!-- The Grid -->
+    <div class="w3-row">
+        <!-- Left Column -->
+        <div class="w3-col m3">
+            <!-- Profile -->
+            <div class="w3-card-2 w3-round w3-white">
+                <div class="w3-container">
+                    <h4 class="w3-center">Map</h4>
+                    <div id="Map" style="width:100%; height:350px;"></div>
+                    <hr>
+                    <p><i class="fa fa fa-globe fa-fw w3-margin-right w3-text-theme"></i> Taiwan</p>
+                </div>
+            </div>
+            <br>
+            <!-- Accordion -->
+            <div class="w3-card-2 w3-round">
+                <div class="w3-white">
+                    <button onclick="UnfoldedFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align">
+                        <i class="fa fa-circle-o-notch fa-fw w3-margin-right"></i> Category
+                    </button>
+                    <div id="Demo1" class="w3-hide w3-container">
+                        <br />
+                        <p>Low</p>
+                        <div class="w3-light-grey w3-round-xlarge w3-small">
+                            <div class="w3-container w3-center w3-round-xlarge w3-green w3-text-black" style="width:30%">1 - 2</div>
+                        </div>
+                        <p>Moderate</p>
+                        <div class="w3-light-grey w3-round-xlarge w3-small">
+                            <div class="w3-container w3-center w3-round-xlarge w3-yellow w3-text-black" style="width:40%">3 - 5</div>
+                        </div>
+                        <p>High</p>
+                        <div class="w3-light-grey w3-round-xlarge w3-small">
+                            <div class="w3-container w3-center w3-round-xlarge w3-orange w3-text-black" style="width:60%">6 - 7</div>
+                        </div>
+                        <p>Very High</p>
+                        <div class="w3-light-grey w3-round-xlarge w3-small">
+                            <div class="w3-container w3-center w3-round-xlarge w3-red w3-text-black" style="width:80%">8 - 10</div>
+                        </div>
+                        <p>Extreme</p>
+                        <div class="w3-light-grey w3-round-xlarge w3-small">
+                            <div class="w3-container w3-center w3-round-xlarge w3-purple w3-text-black" style="width:100%">11+</div>
+                        </div>
+                        <br>
+                    </div>
+                    <button onclick="UnfoldedFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="fa fa-calendar-check-o fa-fw w3-margin-right"></i> LInk</button>
+                    <div id="Demo2" class="w3-hide w3-container">
+                        <br />
+                        <p><a href="http://www.unsun.com.tw/knowledge_uv02.html" class="w3-button w3-block w3-theme-l4">防曬知識網</a></p>
+                        <p><a href="http://www.cwb.gov.tw/V7/observe/UVI/UVI.htm" class="w3-button w3-block w3-theme-l4">中央氣象局</a></p>
+                        <p><a href="https://market.cloud.edu.tw/content/junior/earth/tp_tm/new/item0402/knowledge/w38.htm" class="w3-button w3-block w3-theme-l4">紫外線指數</a></p>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <!-- Alert Box -->
+            <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+                <span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
+                    <i class="fa fa-remove"></i>
+                </span>
+                <p><strong>哈囉!</strong></p>
+                <p>紫外線是很可怕滴~ 要記得做好防曬措施喔</p>
+            </div>
+            <!-- End Left Column -->
+        </div>
+        <!-- Middle Column -->
+        <div class="w3-col m7">
+            <div class="w3-row-padding">
+                <div class="w3-col m12">
+                    <div class="w3-card-2 w3-round w3-white">
+                        <div class="w3-container w3-padding">
+                            <div class="input-group">
+                                <span class="input-group-addon "><i class="glyphicon glyphicon-search"></i></span>
+                                <input class="w3-input w3-border w3-padding" type="text" placeholder="Search for SiteName.." id="myInput" onkeyup="myFunction()" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-container w3-card-2 w3-white w3-round w3-margin pre-scrollable" style="max-height:800px">
+                <br>
+                <h5 class="w3-text-grey"><i class="fa fa-list-ul fa-fw w3-margin-right w3-small w3-text-teal"></i>List</h5>
+                <hr>
+                <table class="w3-table w3-striped w3-centered" id="myTable">
+                    <tr>
+                        <th style="width:10%;">測站</th>                       
+                        <th style="width:12%;">最新UVI</th>
+                        <th style="width:20%;">發布機關</th>
+                        <th style="width:10%;">縣市</th>
+                        <th style="width:26%;">更新時間</th>
+                        <th style="width:12%;">顯示所有</th>
+                    </tr>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        if (Model[i].LastRecordTime == DateTime.MinValue)
+                        {
+                            <tr>
+                                <td>@Model[i].SiteName</td>
+                                <td>None</td>
+                                <td>None</td>
+                                <td>None</td>
+                                <td>None</td>
+                                <td>None</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@Model[i].SiteName</td>
+                                <td>
+                                    <span class="w3-badge @Html.Raw(ViewBag.check_UVIclass(Model[i].LastRecordUVI))">@Model[i].LastRecordUVI</span>
+                                </td>
+                                <td>@Model[i].PublishAgency</td>
+                                <td>@Model[i].County</td>
+                                <td class="w3-text-teal fa fa-calendar fa-fw w3-margin-right">
+                                    @Model[i].LastRecordTime.ToString("yyyy/MM/dd HH:mm")
+                                </td>
+                                <td><a href="/Record/Index?sitename=@Model[i].SiteName" class="w3-button w3-theme-l1 btn-sm">Enter</a></td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+            <!-- End Middle Column -->
+        </div>
+        <!-- Right Column -->
+        <div class="w3-col m2">
+            <div class="w3-card-2 w3-round w3-white w3-center">
+                <div class="w3-container">
+                    <h4><strong>Protection:</strong></h4>
+                    <div class="w3-centered">
+                        <span class="w3-badge w3-green">1</span>
+                        <span class="w3-badge w3-green">2</span>
+                    </div>
+                    <p>基本上不須要保護措施！可以安心外出，但請留意瞬間的紫外線。</p>
+                    <hr />
+                    <div class="w3-centered">
+                        <span class="w3-badge w3-yellow">3</span>
+                        <span class="w3-badge w3-yellow">4</span>
+                        <span class="w3-badge w3-yellow">5</span>
+                        <span class="w3-badge w3-orange">6</span>
+                        <span class="w3-badge w3-orange">7</span>
+                    </div>
+                    <p>須要保護措施！外出時！盡量待在陰涼處，並使用長袖衣物、帽子、陽傘、防曬乳、太陽眼鏡作為保護！</p>
+                    <hr />
+                    <div class="w3-centered">
+                        <span class="w3-badge w3-red">8</span>
+                        <span class="w3-badge w3-red">9</span>
+                        <span class="w3-badge w3-red">10</span>
+                        <span class="w3-badge w3-purple">11+</span>
+                    </div>
+                    <p>必須要保護措施！上午10點至下午2點最好不要外出！盡量待在室內，並使用帽子、陽傘、防曬乳、太陽眼鏡作為保護！</p>
+                    <hr />
+                    @*<p><strong>About UVI:</strong></p>*@
+                </div>
+            </div>
+            <br>
+
+            <div class="w3-card-2 w3-round w3-white w3-center">
+                <div class="w3-container">
+                    <h3>Friend Request</h3>
+                    <img src="~/Content/IMAGE/uv.png" alt="Avatar" style="width:50%"><hr>
+                    <span>Ultraviolet INDEX</span>
+                    <div class="w3-row w3-opacity">
+                        <div class="w3-half">
+                            <button class="w3-button w3-block w3-green w3-section" title="Accept"><i class="fa fa-check"></i></button>
+                        </div>
+                        <div class="w3-half">
+                            <button class="w3-button w3-block w3-red w3-section" title="Decline"><i class="fa fa-remove"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <!-- End Right Column -->
+        </div>
+
+        <!-- End Grid -->
+    </div>
+
+    <!-- End Page Container -->
+</div>
+<br>
+<!-- Footer -->
+<footer class="w3-container w3-theme-d3 w3-padding-16">
+    <h5>Footer</h5>
+</footer>
+
+<footer class="w3-container w3-theme-d5">
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+<script>
+    // Accordion
+    function UnfoldedFunction(id) {
+        var x = document.getElementById(id);
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+            x.previousElementSibling.className += " w3-theme-d1";
+        } else {
+            x.className = x.className.replace("w3-show", "");
+            x.previousElementSibling.className =
+            x.previousElementSibling.className.replace(" w3-theme-d1", "");
+        }
+    }
+
+    // Used to toggle the menu on smaller screens when clicking on the menu button
+    function openNav() {
+        var x = document.getElementById("navDemo");
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+</script>
+<!-- Page Container -->

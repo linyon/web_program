@@ -8,6 +8,13 @@
             padding-top: 60pt;
         }
     </style>
+    <meta charset="utf-8" />
+    <script src="~/scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Content/jvectormap/js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="~/Content/jvectormap/js/jquery-jvectormap-tw.js"></script>
+    <link rel="Stylesheet" href="~/Content/jvectormap/css/jquery-jvectormap-1.2.2.css" />
+
+
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
 </head>
 <body>
@@ -31,14 +38,15 @@
         </div>
     </div>
     <div class="container body-content">
+        
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - 我的 ASP.NET 應用程式</p>
         </footer>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="~/Content/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>*@
+
     @*@Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)*@

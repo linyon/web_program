@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <style>
+        body {
+            padding-top: 100px;
+        }
+
+        .nav.nav-justified > li > a {
+            position: relative;
+        }
+
+            .nav.nav-justified > li > a:hover,
+            .nav.nav-justified > li > a:focus {
+                background-color: transparent;
+            }
+
+            .nav.nav-justified > li > a > .quote {
+                position: absolute;
+                right: 20px;
+                bottom: 0;
+                opacity: 0;
+                width: 30px;
+                height: 30px;
+                padding: 5px;
+                background-color: #13c0ba;
+                border-radius: 15px;
+                color: #fff;
+            }
+
+        .nav.nav-justified > li.active > a > .quote {
+            opacity: 1;
+        }
+
+        .nav.nav-justified > li > a > img {
+            box-shadow: 0 0 0 5px #13c0ba;
+        }
+
+        .nav.nav-justified > li > a > img {
+            max-width: 100%;
+            opacity: .3;
+            -webkit-transform: scale(.8,.8);
+            transform: scale(.8,.8);
+            -webkit-transition: all 0.3s 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .nav.nav-justified > li.active > a > img,
+        .nav.nav-justified > li:hover > a > img,
+        .nav.nav-justified > li:focus > a > img {
+            opacity: 1;
+            -webkit-transform: none;
+            transform: none;
+            -webkit-transition: all 0.3s 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+    <meta charset="utf-8" />
+    <script src="~/Content/jvectormap/js/jquery-2.1.4.min.js"></script>
+    <script src="~/Content/jvectormap/js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="~/Content/jvectormap/js/jquery-jvectormap-tw.js"></script>
+    <link rel="Stylesheet" href="~/Content/jvectormap/css/jquery-jvectormap-1.2.2.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        html, body, h1, h2, h3, h4, h5, h6 {
+            font-family: "Open Sans", sans-serif;
+        }
+    </style>
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=false&sensor=true"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+</head>
+<body class="w3-theme-l5">
+    <!-- Navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
+            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a href="~/Home/Index" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Home</a>
+            <a href="~/Station/Index" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="UVI"><i class="fa fa-globe"></i></a>
+            <div class="w3-dropdown-hover w3-hide-small">
+                <button class="w3-button w3-padding-large" title="Members"><i class="fa fa-user"></i><span class="w3-badge w3-right w3-small w3-green">3</span></button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:150px">
+                    <a href="~/Home/About" class="w3-bar-item w3-button">Lin You-En</a>
+                    <a href="#" class="w3-bar-item w3-button">John Doe</a>
+                </div>
+            </div>
+            <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="I Love Taiwan"><img src="~/Content/IMAGE/taiwan-512.png" class="w3-circle" style="height:25px;width:25px" alt="Avatar"></a>
+        </div>
+    </div>
+    <div class="container body-content">
+
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - 我的 ASP.NET 應用程式</p>
+        </footer>
+    </div>
+</body>
+</html>
